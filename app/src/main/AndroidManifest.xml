@@ -18,7 +18,7 @@
             android:label="ADD HAPPY PLACES"
             android:exported="false"
             tools:ignore="LockedOrientationActivity"
-            android:theme="@style/CustomNoActionBarTheme"/>
+            android:theme="@style/CustomActionBarTheme"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">

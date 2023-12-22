@@ -1,19 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.HappyPlaces" parent="Theme.Material3.Light">
-
+    <style name="Base.Theme.HappyPlaces" parent="Theme.AppCompat.DayNight">
+        <item name="android:actionBarStyle">@color/colorPrimaryDark</item>
+        <item name="android:colorBackground">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="Theme.HappyPlaces" parent="Base.Theme.HappyPlaces" >
+            <item name="colorPrimary">@color/colorPrimary</item>
+            <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+            <item name="colorAccent">@color/colorAccent</item>
+
 
     </style>
 
-    <style name="CustomNoActionBarTheme" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
+    <style name="CustomActionBarTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:actionBarStyle">@color/colorPrimaryDark</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="CustomToolbarStyle">
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:colorControlNormal">#FFFFFF</item>
-    </style>
 </resources>
