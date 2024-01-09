@@ -2,7 +2,9 @@
 
 package com.example.happyplaces.activities
 
+import DatabaseHandler
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
@@ -20,7 +22,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.happyplaces.R
-import com.example.happyplaces.database.DatabaseHandler
 import com.example.happyplaces.databinding.ActivityAddHappyPlaceBinding
 import com.example.happyplaces.model.HappyPlaceModel
 import com.karumi.dexter.Dexter
@@ -45,8 +46,11 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
     private var mLatitude:Double = 0.0
     private var mLongitude:Double = 0.0
 
+    private var mHappyPlaceDetail:HappyPlaceModel? = null
+
 
     private var binding: ActivityAddHappyPlaceBinding?= null
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddHappyPlaceBinding.inflate(layoutInflater)
@@ -58,6 +62,12 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }
 
+        if (intent.hasExtra(MainActivity.EXTRA_PLACE_DETAILS)){
+            mHappyPlaceDetail =
+                intent.getSerializableExtra(MainActivity.EXTRA_PLACE_DETAILS)
+                    as HappyPlaceModel
+        }
+
         dateSetListener = DatePickerDialog.OnDateSetListener{ _, year, month, dayOfMonth ->
             cal.set(Calendar.YEAR, year)
             cal.set(Calendar.MONTH, month)
@@ -65,6 +75,20 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
             updateDateInView()
         }
         updateDateInView()
+
+        if (mHappyPlaceDetail != null){
+            supportActionBar?.title = "Edit Happy Places"
+            binding?.etTitle?.setText(mHappyPlaceDetail!!.title)
+            binding?.etDate?.setText(mHappyPlaceDetail!!.date)
+            binding?.etDescription?.setText(mHappyPlaceDetail!!.description)
+            binding?.etLocation?.setText(mHappyPlaceDetail!!.location)
+            mLongitude = mHappyPlaceDetail!!.longitude
+            mLongitude = mHappyPlaceDetail!!.latitude
+
+            saveImagetoGallery = Uri.parse(mHappyPlaceDetail!!.image)
+            binding?.ivPlaceImage?.setImageURI(saveImagetoGallery)
+            binding?.btnSave?.text = "Update"
+        }
         binding?.etDate?.setOnClickListener(this)
         binding?.tvAddImage?.setOnClickListener(this)
         binding?.btnSave?.setOnClickListener(this)
@@ -107,9 +131,8 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                         Toast.makeText(this, "PLEASE SELECT AN IMAGE", Toast.LENGTH_SHORT).show()
                     }
                     else ->{
-                        try {
                             val happyPlaceModel = HappyPlaceModel(
-                                0,
+                                if (mHappyPlaceDetail == null) 0 else mHappyPlaceDetail!!.id,
                                 binding?.etTitle?.text.toString(),
                                 binding?.etDescription?.text.toString(),
                                 binding?.etDate?.text.toString(),
@@ -119,19 +142,20 @@ class AddHappyPlaceActivity : AppCompatActivity(), View.OnClickListener {
                                 saveImagetoGallery.toString()
                             )
                             val dbHandler = DatabaseHandler(this)
+                        if (mHappyPlaceDetail == null){
                             val addHappyPlace = dbHandler.addHappyPlace(happyPlaceModel)
                             if (addHappyPlace > 0) {
-                                Toast.makeText(
-                                    this,
-                                    "The Happy Place is Added Successfully",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                            }
+                        }else{
+                            val updateHappyPlace = dbHandler.updateHappyPlace(happyPlaceModel)
+                            if (updateHappyPlace > 0) {
+                                setResult(Activity.RESULT_OK)
                                 finish()
                             }
                         }
-                        catch (e:DataFormatException){
-                            e.printStackTrace()
-                        }
+
                     }
 
                 }
