@@ -42,8 +42,15 @@ android {
 
 dependencies {
 
+    debugImplementation("com.infinum.dbinspector:dbinspector:5.4.9")
+    releaseImplementation ("com.infinum.dbinspector:dbinspector-no-op:5.4.9")
+
+    implementation ("androidx.fragment:fragment-ktx:1.6.2")
+    implementation ("androidx.activity:activity-ktx:1.8.2")
+    implementation("com.karumi:dexter:6.2.3")
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("de.hdodenhof:circleimageview:3.0.1")
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     testImplementation("junit:junit:4.13.2")
